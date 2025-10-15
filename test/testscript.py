@@ -6,12 +6,22 @@
 #
 #print(is_palindrome("skala"))
 
-def fibonacci(liczba):
-    if liczba == 1:
-        return 1
-    elif liczba == 0:
-        return 0
-    elif liczba > 1:
-        return fibonacci(liczba-1) + fibonacci(liczba-2)
+#def fibonacci(liczba):
+#    if liczba == 1:
+#        return 1
+#    elif liczba == 0:
+#        return 0
+#    elif liczba > 1:
+#        return fibonacci(liczba-1) + fibonacci(liczba-2)
+#
+#print(fibonacci(20))
 
-print(fibonacci(20))
+def count_vowels(text: str):
+    vowels_amt = 0
+    for letter in text.lower():
+        if letter in ('a', 'e', 'i', 'o', 'u', 'y'):
+            vowels_amt += 1
+    return vowels_amt
+
+print("ilosc samoglosek to: ", end = "")
+print(count_vowels('skala'))
