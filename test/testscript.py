@@ -26,9 +26,22 @@
 #print("ilosc samoglosek to: ", end = "")
 #print(count_vowels('skala'))
 
-def calculate_discount(price: float, discount: float):
-    if discount < 0 or discount > 1:
-        raise ValueError
-    return price * (1-discount)
+#def calculate_discount(price: float, discount: float):
+#    if discount < 0 or discount > 1:
+#        raise ValueError
+#    return price * (1-discount)
+#
+#print(calculate_discount(100, 0.2))
 
-print(calculate_discount(100, 0.2))
+def flatten_list(nested_list: list):
+    mem = []
+    for i in range(len(nested_list)):
+        if type(nested_list[i]) == list:
+            mem = mem + flatten_list(nested_list[i])
+        else:
+            mem = mem + [nested_list[i]]
+    return mem
+
+my_list = [1, [2, 3], [4, [5]]]
+
+print(flatten_list(my_list))
