@@ -33,15 +33,26 @@
 #
 #print(calculate_discount(100, 0.2))
 
-def flatten_list(nested_list: list):
-    mem = []
-    for i in range(len(nested_list)):
-        if type(nested_list[i]) == list:
-            mem = mem + flatten_list(nested_list[i])
+#def flatten_list(nested_list: list):
+#    mem = []
+#    for i in range(len(nested_list)):
+#        if type(nested_list[i]) == list:
+#            mem = mem + flatten_list(nested_list[i])
+#        else:
+#            mem = mem + [nested_list[i]]
+#    return mem
+
+#my_list = [1, [2, 3], [4, [5]]]
+
+#print(flatten_list(my_list))
+
+def word_frequencies(text: str):
+    word_count = {}
+    for word in text.lower().strip(',.').split():
+        if word not in word_count:
+            word_count[word] = 1
         else:
-            mem = mem + [nested_list[i]]
-    return mem
+            word_count[word] = word_count[word] + 1
+    return word_count
 
-my_list = [1, [2, 3], [4, [5]]]
-
-print(flatten_list(my_list))
+print(word_frequencies('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'))
