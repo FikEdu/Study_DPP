@@ -45,8 +45,8 @@ if cur.execute('''SELECT name FROM sqlite_master WHERE name='api_users' ''').fet
 
 USERS_DB = {}
 
-query = [list(row) for row in cur.execute('''SELECT usr_username, usr_password FROM api_users''').fetchall()]
+query = [list(row) for row in cur.execute('''SELECT usr_username, usr_password, usr_is_admin FROM api_users''').fetchall()]
 for user in query:
-    USERS_DB[user[0]] = user[1]
+    USERS_DB[user[0]] = {'password' : user[1], 'is_admin' : user[2]}
 
 con.close()

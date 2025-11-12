@@ -22,7 +22,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload["sub"]
+        return payload
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token has expired")
     except jwt.InvalidTokenError:
@@ -34,11 +34,12 @@ def login(data: LoginData):
     password = data.password.encode('utf-8')
     if username not in USERS_DB:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    hashed_pw = USERS_DB[username]
+    hashed_pw = USERS_DB[username]['password']
     if not bcrypt.checkpw(password, hashed_pw):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     payload = {
         "sub": username,
+        "is_admin": USERS_DB[username]['is_admin'],
         "iat": datetime.utcnow(),
         "exp": datetime.utcnow() + timedelta(hours=1)
     }
@@ -46,7 +47,9 @@ def login(data: LoginData):
     return {"access_token": token, "token_type": "bearer"}
 
 @app.post("/register")
-def register(data: LoginData):
+def register(data: LoginData ,user_data: dict = Depends(verify_token)):
+    if not user_data.get("is_admin"):
+        raise HTTPException(status_code=403, detail="You are not an admin")
     username = data.username
     password = data.password.encode('utf-8')
     if username in USERS_DB:
