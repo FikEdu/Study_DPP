@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 import yaml
 from ultralytics import YOLO
 import time
-import easyocr
 import numpy as np
 from tqdm import tqdm
 from fast_alpr import ALPR
@@ -162,11 +161,6 @@ model = YOLO('runs/detect/tab_v8n/weights/best.pt')
 
 metrics = model.val(split='test')
 
-# reader = easyocr.Reader(['en'], gpu=True)
-reader = easyocr.Reader(['en'], gpu=False)
-
-model = YOLO('runs/detect/tab_v8n/weights/best.pt')
-
 alpr = ALPR(
     detector_model='yolo-v9-t-384-license-plate-end2end',
     ocr_model='global-plates-mobile-vit-v2-model'
@@ -174,11 +168,11 @@ alpr = ALPR(
 
 test_samples = df.sample(100, random_state=42) if len(df) >= 100 else df
 
-correct_count = 0
-results_log = []
+alpr_correct_count = 0
+alpr_results_log = []
 
-print(f"Testing on {len(test_samples)} photos ")
-start_time = time.time()
+print(f"\nTesting on {len(test_samples)} photos ")
+alpr_start_time = time.time()
 
 for index, row in tqdm(test_samples.iterrows(), total=len(test_samples)):
     image_path = row['image_path']
@@ -218,13 +212,13 @@ for index, row in tqdm(test_samples.iterrows(), total=len(test_samples)):
 
     if true_plate != "N_D":
         if final_text == true_plate:
-            correct_count += 1
+            alpr_correct_count += 1
         else:
-            results_log.append({'true': true_plate, 'pred': final_text})
+            alpr_results_log.append({'true': true_plate, 'pred': final_text})
 
-end_time = time.time()
-processing_time= end_time - start_time
-accuracy = (correct_count / len(test_samples)) * 100
-print(f"Accuracy: {accuracy:.2f}%")
+alpr_end_time = time.time()
+processing_time= alpr_end_time - alpr_start_time
+accuracy = (alpr_correct_count / len(test_samples)) * 100
+print(f"Accuracy OCR using fastALPR: {accuracy:.2f}%")
 print(f"Processing time: {processing_time:.2f}s")
-calculate_final_grade(accuracy_percent=accuracy, processing_time_sec=processing_time)
+print(calculate_final_grade(accuracy_percent=accuracy, processing_time_sec=processing_time))
